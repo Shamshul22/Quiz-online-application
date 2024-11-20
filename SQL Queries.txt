@@ -1,0 +1,100 @@
+Steps to copy and paste queries into SQL Plus
+
+1. Open SQL* plus and enter username and password.
+2. Press ALT + Spacebar or right click on title bar.
+3. Goto edit > paste.
+4. Paste the below sample queries to create your own database.
+5. Test the project with these sample login details.
+
+****  STUDENT TABLE ****
+
+create table student 
+(id number(10) not null, 
+fname varchar2(50) not null, 
+lname varchar2(50) not null, 
+gender varchar2(6), 
+dob date not null,
+mobile number(10), 
+email varchar2(50), 
+password varchar2(50), 
+constraint student_pk primary key (id));
+
+insert into student 
+values (1001, 'Surya', 'Saini', 'Male', date '1996-11-12', 7291885612, 'surya.saini@wipro.com', 'Hello1');
+
+select * from student;
+
+
+****  PROFESSOR TABLE ****
+
+create table professor 
+(id number(10) not null, 
+dept varchar2(50) not null, 
+fname varchar2(50) not null, 
+lname varchar2(50) not null, 
+gender varchar2(6), 
+dob date not null, 
+qualification varchar2(10), 
+mobile number(10), 
+email varchar2(50), 
+password varchar2(50), 
+constraint professor_pk primary key (id));
+
+insert into professor 
+values (2001, 'cse', 'Narendra', 'Modi', 'Male', date '1950-09-17', 'phd', 9999999999, 'narendra.modi@pmo.in', 'Modi123');
+
+select * from professor;
+
+
+****  TOPICS TABLE ****
+
+create table topics (topic varchar2(50));
+
+insert into topics values('Java');
+
+
+****  JAVA TABLE ****
+
+create table java
+(quesid number(3) not null,
+ques varchar2(2000),
+op1 varchar2(1000),
+op2 varchar2(1000),
+op3 varchar2(1000),
+op4 varchar2(1000),
+ans varchar2(1000),
+constraint java_pk primary key(quesid));
+
+
+****  RESULTS TABLE ****
+
+create table results
+(stuid number(5) not null,
+topic varchar2(50) not null,
+level1 number(3),
+level2 number(3),
+level3 number(3),
+time varchar2(50) not null);
+
+
+****  RESULTS TABLE LEVELS SEQUENCE ****
+
+create sequence results_lvl1_seq start with 1 increment by 1;
+create sequence results_lvl2_seq start with 1 increment by 1;
+create sequence results_lvl3_seq start with 1 increment by 1;
+
+
+****  RESULTS TABLE TRIGGER ****
+
+CREATE OR REPLACE TRIGGER RESULTS_ANS 
+BEFORE INSERT ON results
+FOR EACH ROW
+begin
+	if :new.quesid >=1 and :new.quesid <=10 then
+		select results_lvl1_seq.nextval into :new.level1 from dual;
+  	elsif :new.quesid >=11 and :new.quesid <=20 then
+		select results_lvl2_seq.nextval into :new.level2 from dual;
+	elsif :new.quesid >=21 and :new.quesid <=30 then
+		select results_lvl3_seq.nextval into :new.level3 from dual;
+	end if;		
+end;
